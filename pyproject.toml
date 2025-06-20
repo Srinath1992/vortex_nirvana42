@@ -11,8 +11,8 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vtx"
-version = "1.0.6"
+name = "vortex"
+version = "1.0.7"
 description = "Reference implementation of operators for deep signal processing architectures"
 readme = "README.md"
 license = {file = "LICENSE"}
