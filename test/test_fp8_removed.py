@@ -10,6 +10,7 @@ verifies two conditions:
 import pathlib
 import sys
 
+import pytest
 import torch
 
 # Ensure the repository root is importable regardless of where pytest is invoked
@@ -18,6 +19,7 @@ if _REPO_ROOT.as_posix() not in sys.path:
     sys.path.insert(0, _REPO_ROOT.as_posix())
 
 from vortex.modeling import load_pretrained
+
 
 
 def test_forward_bf16():
