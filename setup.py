@@ -52,6 +52,9 @@ flash_attn_sources = [
 if 'CUDNN_HOME' not in os.environ:
     os.environ['CUDNN_HOME'] = '/usr/local/cuda'  # Default location
 
+# -----------------------------------------------------------------------------
+# Native extension toggle – set SKIP_NATIVE=1 to install Python-only
+# -----------------------------------------------------------------------------
 include_dirs = [
     str(setup_dir / "vortex/ops/attn/csrc/flash_attn"),
     str(setup_dir / "vortex/ops/attn/csrc/flash_attn/src"),
@@ -61,17 +64,21 @@ include_dirs = [
     str(os.environ.get('CUDNN_HOME', '')),
 ]
 
-ext_modules = [
-    CUDAExtension(
-        name="flash_attn_2_cuda",
-        sources=flash_attn_sources,
-        extra_compile_args={
-            "cxx": ["-O3", "-std=c++17"],
-            "nvcc": nvcc_args,
-        },
-        include_dirs=include_dirs,
-    )
-]
+if os.getenv("SKIP_NATIVE") == "1":
+    print("[setup.py] SKIP_NATIVE=1 → installing Python-only; CUDA extensions will NOT be built.")
+    ext_modules = []
+else:
+    ext_modules = [
+        CUDAExtension(
+            name="flash_attn_2_cuda",
+            sources=flash_attn_sources,
+            extra_compile_args={
+                "cxx": ["-O3", "-std=c++17"],
+                "nvcc": nvcc_args,
+            },
+            include_dirs=include_dirs,
+        )
+    ]
 
 setup(
     name="vtx",

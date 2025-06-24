@@ -1,12 +1,13 @@
 .PHONY: setup clean dev lint format submodules
 
-PYTHON := python3.11
+# Allow external override; default to system default python3 if python3.11 not present
+PYTHON ?= $(shell command -v python3.11 2>/dev/null || command -v python3)
 UV := uv
 VENV_BIN := $(CURDIR)/.venv/bin
 CONDA_ENV_NAME := vortex
 
-PYTHON_VERSION := $(shell $(PYTHON) -c 'import sys; print(sys.version_info[0])')
-TARGET_PYTHON_VERSION := 3.11
+PYTHON_VERSION := $(shell $(PYTHON) -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}")')
+TARGET_PYTHON_VERSION := $(PYTHON_VERSION)
 CUDA_PATH := /usr/local/cuda
 CUDA_INCLUDE_PATH := $(CUDA_PATH)/include
 CUDA_LIB_PATH := $(CUDA_PATH)/lib64
@@ -69,7 +70,8 @@ setup-vortex-ops-hyenax: _check_env_enabled _setup_missing_env
 	cd vortex/ops/hyenax && pip install -e .
 
 submodules:
-	git submodule update --init --recursive
+	# git submodule update --init --recursive  # disabled in dev container (mounted repo already includes code)
+	@echo "Skipping git submodule update (dev mode)"
 
 clean:
 	rm -rf .venv
