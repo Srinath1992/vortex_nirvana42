@@ -862,10 +862,11 @@ class StripedHyena(nn.Module):
         # Find keys that are in state_dict but not in model_dict
         extra_in_state_dict = state_dict.keys() - model_dict.keys()
 
+        # Switched to logger.debug to avoid noisy stdout during normal execution.
         if missing_in_state_dict:
-            print(f"Keys missing in state_dict: {missing_in_state_dict}")
+            self.logger.debug(f"Keys missing in state_dict: {missing_in_state_dict}")
         if extra_in_state_dict:
-            print(f"Extra keys in state_dict: {extra_in_state_dict}")
+            self.logger.debug(f"Extra keys in state_dict: {extra_in_state_dict}")
 
         filtered_dict = {k: v for k, v in state_dict.items() if k in model_dict}
 
